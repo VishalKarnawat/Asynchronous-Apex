@@ -1,0 +1,31 @@
+public class LeadBatchApex implements Database.Batchable<SObject>,Database.Stateful {
+	
+    public Integer totalRecordsProcessed = 0;
+    
+    public Database.QueryLocator start(Database.BatchableContext BC){
+        return Database.getQueryLocator('SELECT Id, LeadSource FROM Lead');
+    }
+    
+    public void execute(Database.BatchableContext BC, List<Lead> scope){
+        for(Lead leadRecord : scope){
+            leadRecord.LeadSource = 'Phone Inquiry';
+        }
+        update scope;
+        totalRecordsProcessed += scope.size();
+    }
+    
+    public void finish(Database.BatchableContext BC){
+        // sent email or call another batch
+        System.debug('Batch Finished');
+        System.debug('Total records processed: ' + totalRecordsProcessed);
+    }
+}
+
+/* Developer console code
+
+LeadBatchApex leadBatchInstance = new LeadBatchApex();
+
+// calling with a batch size 50
+Database.executeBatch(leadBatchInstance, 50);
+
+*/
