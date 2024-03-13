@@ -8,7 +8,7 @@ public class FutureMethodLead {
         }
         update existingRecords;
         
-        createLeadRecords();
+        // createLeadRecords(); // we can't call this here
     }
 
     @future
